@@ -1,7 +1,7 @@
 web-fs
 ===
 
-Currently only implements `fs.createReadStream` (sort of) and `fs.stat`
+Currently only implements `fs.createWriteStream` (sort of) and `fs.stat`
 
 ## Install
 
