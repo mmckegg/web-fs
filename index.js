@@ -34,7 +34,12 @@ module.exports = {
           fileWriter.seek(fileWriter.length)
         }
 
+        fileWriter.onwriteend = function(){
+          stream.resume()
+        }
+
         stream.on('data', function(data){
+          stream.pause()
           var blob = new Blob([data])
           fileWriter.write(blob);
         })
