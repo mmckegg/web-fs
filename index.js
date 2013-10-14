@@ -40,8 +40,10 @@ module.exports = {
 
         stream.on('data', function(data){
           stream.pause()
-          var blob = new Blob([data])
-          fileWriter.write(blob);
+          if (!(data instanceof Blob)){
+            data = new Blob([data])
+          }
+          fileWriter.write(data);
         })
 
         stream.resume()
