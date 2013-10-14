@@ -1,6 +1,6 @@
 {
   "name": "web-fs",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Node's fs module for browsers using Web FileSystem API",
   "main": "index.js",
   "scripts": {
