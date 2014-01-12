@@ -1,14 +1,14 @@
 var Through = require('through')
 
 module.exports = {
-  createWriteStream: function(filePath, options){
+  createWriteStream: function(filePathOrEntry, options){
     var options = options || {}
     var stream = Through()
     stream.pause()
 
     function onError(err){ stream.emit('error', err) }
 
-    getFile(filePath, function(err, fileEntry){
+    getFile(filePathOrEntry, function(err, fileEntry){
       if(err)return onError(err)
 
       stream.url = fileEntry.toURL()
@@ -54,8 +54,8 @@ module.exports = {
     return stream
   },
 
-  stat: function(filePath, cb){
-    getFile(filePath, function(err, fileEntry){
+  stat: function(filePathOrEntry, cb){
+    getFile(filePathOrEntry, function(err, fileEntry){
       if(err)return cb&&cb(err)
 
       fileEntry.getMetadata(function(meta){
@@ -69,14 +69,19 @@ module.exports = {
 
 }
 
-function getFile(filePath, cb){
-  getFileSystem(function(err, fs){
-    if(err)return cb&&cb(err)
+function getFile(filePathOrEntry, cb){
+  if (typeof filePathOrEntry === 'string'){
+    getFileSystem(function(err, fs){
+      if(err)return cb&&cb(err)
 
-    fs.root.getFile(filePath, {create: true}, function(fileEntry) {
-      cb(null, fileEntry)
+      fs.root.getFile(filePathOrEntry, {create: true}, function(fileEntry) {
+        cb(null, fileEntry)
+      }, cb)
     }, cb)
-  }, cb)
+  } else {
+    cb(null, filePathOrEntry)
+  }
+
 }
 
 var fileSystem = null
@@ -90,4 +95,3 @@ function getFileSystem(cb){
     })
   }
 }
-
