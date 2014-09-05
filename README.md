@@ -19,7 +19,7 @@ Use with [browserify](http://browserify.org)!
 var WebFS = require('web-fs')
 ```
 
-## `var fs = WebFS(entry)`
+### `var fs = WebFS(entry)`
 
 Create an instance of `WebFS` with a root directory specified by `entry` ([DirectoryEntry](https://developer.mozilla.org/en-US/docs/Web/API/DirectoryEntry)).
 
