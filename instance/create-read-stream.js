@@ -1,75 +1,98 @@
-var through = require('through')
+var Readable = require('stream').Readable
 var Buffer = require('buffer').Buffer
+var inherits = require('util').inherits
 
 module.exports = createReadStream
 
 function createReadStream(path, opts){
-  
-  var encoding = null;
-  if(typeof opts == 'string'){
-    encoding = String(opts).toLowerCase();
-    opts = Object.create(null)
-  }
-  
-  opts = opts || Object.create(null)
-  
-  var stream = through()
-  stream.pause()
+  return new ReadStream(this, path, opts)
+}
 
-  this.entry.getFile(path, {create: opts.create || false}, success, error)
-  
-  function success(fileEntry){
-    stream.url = fileEntry.toURL()
+function ReadStream(fs, filePath, encoding){
+  if (!(this instanceof ReadStream)){
+    return new ReadStream(fs, filePath, opts)
+  }
+
+  var self = this
+  self._reading = false
+  self.encoding = encoding || 'buffer';
+  self.filePath = filePath
+  self.fs = fs
+
+  var streamOptions = {}
+  if (self.encoding !== 'buffer'){
+    streamOptions.objectMode = true
+  }
+
+  Readable.call(this, streamOptions)
+}
+
+inherits(ReadStream, Readable)
+
+ReadStream.prototype._read = function(){ //TODO: handle back pressure
+  var self = this
+
+  if (!self._reading){
+    self._reading = true
 
     var readType = 'readAsText';
     var type = {type: ''};
-  
-    fileEntry.file(function(file){
-      switch(encoding){
-        case 'base64':
-        case 'base-64':
-          type.type = 'application/base64'
-          break;
-        case 'utf8':
-        case 'utf-8':
-          type.type = 'text/plain;charset=UTF-8'
-          break;
-        case null:
-        case 'arraybuffer':
-        case 'buffer':
-          readType = 'readAsArrayBuffer'
-          break;
-      }
 
-      var reader = new FileReader();
-      var loaded = 0;
-      var fileSize = 0;
-      reader.onloadstart = function(evt){
-        if(evt.lengthComputable) fileSize = evt.total;
-        stream.emit('loadstart')
-        stream.emit('open')
-      }
-      reader.onprogress = function(evt){
-        var chunkSize = evt.loaded - loaded;
-        if (!encoding || encoding === 'buffer'){
-          stream.emit('data', toBuffer(this.result.slice(loaded, loaded + chunkSize)))
-        } else {
-          stream.emit('data', this.result.slice(loaded, loaded + chunkSize))
+    getEntry(self.fs, self.filePath, function(err, fileEntry){
+
+      self.url = fileEntry.toURL()
+
+      fileEntry.file(function(file){
+
+        switch(self.encoding){
+          case 'base64':
+          case 'base-64':
+            type.type = 'application/base64'
+            break;
+          case 'utf8':
+          case 'utf-8':
+            type.type = 'text/plain;charset=UTF-8'
+            break;
+          case 'arraybuffer':
+          case 'buffer':
+            readType = 'readAsArrayBuffer'
+            break;
         }
-        loaded += evt.loaded;
-      }
-      reader.onloadend = function(evt){
-        stream.emit('end')
-      }
-      reader[readType](file, type)
+
+        var reader = new FileReader()
+        var loaded = 0
+        var fileSize = 0
+
+        reader.onloadstart = function(evt){
+          if(evt.lengthComputable) fileSize = evt.total
+          self.emit('open')
+        }
+
+        reader.onprogress = function(evt){
+          var chunkSize = evt.loaded - loaded;
+          var chunk = this.result.slice(loaded, loaded + chunkSize)
+          if (self.encoding === 'buffer'){
+            chunk = toBuffer(chunk)
+          }
+
+          loaded += evt.loaded;
+          self.push(chunk)
+        }
+
+        reader.onloadend = function(evt){
+          self.push(null)
+        }
+
+        reader[readType](file, type)
+      })
     })
   }
+}
 
-  function error(err){
-    stream.emit('error', err)
-  }
-
-  return stream
+function getEntry(fs, filePath, cb){
+  fs.entry.getFile(filePath, {create: false}, function(entry){
+    cb(null, entry)
+  }, cb)
 }
 
 function toBuffer(source){
