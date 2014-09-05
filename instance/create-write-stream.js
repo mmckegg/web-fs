@@ -9,7 +9,7 @@ function createWriteStream(filePath, opts){
 
 function WriteStream(fs, filePath, opts){
   if (!(this instanceof WriteStream)){
-    return new WriteStream()
+    return new WriteStream(fs, filePath, opts)
   }
 
   var self = this
