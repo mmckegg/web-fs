@@ -1,25 +1,61 @@
 web-fs
 ===
 
-Currently only implements `fs.createWriteStream` (sort of) and `fs.stat`
+Node's [fs](http://nodejs.org/api/fs.html) interface for [Web File System API](https://developer.mozilla.org/en-US/docs/Web/API/FileSystem) and [Chrome Packaged Apps](https://developer.chrome.com/apps/fileSystem). 
 
-## Install
+Based on [johnnyscript's nota-bene](https://github.com/NHQ/nbfs) but allows specifying root entry.
+
+## Install via [npm](https://npmjs.org/package/web-fs)
 
 ```bash
 $ npm install web-fs
 ```
 
-## Example
+Use with [browserify](http://browserify.org)!
+
+## API
 
 ```js
-var fs = require('web-fs')
+var WebFS = require('web-fs')
+```
 
-fs.createWriteStream('/test.txt', function(err, stream){
-  stream.write('testing 123')
-  stream.end()
-})
+## `var fs = WebFS(entry)`
 
-fs.stat('/test.txt', function(err, stat){
-  // stat => { size: 11, mtime: Date }
+Create an instance of `WebFS` with a root directory specified by `entry` ([DirectoryEntry](https://developer.mozilla.org/en-US/docs/Web/API/DirectoryEntry)).
+
+[Web File System API](https://developer.mozilla.org/en-US/docs/Web/API/FileSystem) example:
+
+```js
+var fs = null
+navigator.webkitPersistentStorage.requestQuota(1024*1024, function(grantedBytes) {
+  window.webkitRequestFileSystem(PERSISTENT, grantedBytes, function(result){
+    fs = WebFS(result.root)
+  })
 })
 ```
+
+[Chrome Packaged App File System](https://developer.chrome.com/apps/fileSystem) example:
+
+```js
+var fs = null
+
+// browse for root directory
+chrome.fileSystem.chooseEntry({type: 'openDirectory'}, function(entry){
+  fs = WebFS(entry)
+})
+```
+
+### Instance methods
+
+  - `fs.createReadStream`
+  - `fs.createWriteStream`
+  - `fs.mkdir`
+  - `fs.readFile`
+  - `fs.readdir`
+  - `fs.rename`
+  - `fs.rmdir`
+  - `fs.stat`
+  - `fs.truncate`
+  - `fs.unlink`
+  - `fs.writeFile`
+  - `fs.write`
