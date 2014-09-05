@@ -1,6 +1,6 @@
 {
   "name": "web-fs",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Node's fs interface for Web FS API and Chrome Packaged Apps.",
   "main": "index.js",
   "scripts": {
