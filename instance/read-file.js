@@ -1,3 +1,5 @@
+var Buffer = require('buffer').Buffer
+
 module.exports = readFile
 
 function readFile(path, opts, cb){
