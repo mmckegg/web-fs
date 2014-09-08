@@ -1,3 +1,5 @@
+var Stats = require('../stats.js')
+
 module.exports = stat
 
 function stat(path, cb){
@@ -11,24 +13,5 @@ function stat(path, cb){
 
   function error(err){
     cb(err, null)
-  }
-}
-
-function Stats(entry, meta){
-  this.mtime = meta.modificationTime
-  this.size = meta.size
-  this.entry = entry
-  this.fullPath = entry.fullPath
-}
-
-Stats.prototype = {
-  constructor: Stats,
-  
-  isDirectory: function(){
-    return this.entry.isDirectory
-  },
-
-  isFile: function(){
-    return this.entry.isFile
   }
 }
