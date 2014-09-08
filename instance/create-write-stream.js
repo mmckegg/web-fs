@@ -1,6 +1,8 @@
 var Writable = require('stream').Writable
 var inherits = require('util').inherits
 
+var createFlags = ['w', 'w+', 'a', 'a+']
+
 module.exports = createWriteStream
 
 function createWriteStream(filePath, opts){
@@ -17,8 +19,13 @@ function WriteStream(fs, filePath, opts){
   Writable.call(this)
 
   opts = opts || {}
-  
-  fs.entry.getFile(filePath, {create: opts.create || true}, success, error)
+  opts.flags = opts.flags || 'w'
+
+  var create = !!~createFlags.indexOf(opts.flags)
+  var append = !!~opts.flags.indexOf('a')
+  var truncate = !!~opts.flags.indexOf('w')
+
+  fs.entry.getFile(filePath, {create: create}, success, error)
 
   function error(err){ self.emit('error', err) }
 
@@ -29,17 +36,20 @@ function WriteStream(fs, filePath, opts){
 
     fileEntry.createWriter(function(fileWriter) {
 
-
       fileWriter.onerror = function(err){
         self.emit('error', err)
       }
 
-      if (opts.start){
-        fileWriter.seek(opts.start)
-        start(self, fileWriter)
-      } else if (opts.flags == 'r+') {
+      if (append){
         fileWriter.seek(fileWriter.length)
-        self._fileWriter = fileWriter
+      }
+
+      if (opts.start != null){
+        fileWriter.seek(opts.start)
+      }
+
+      if (opts.truncate){
+        start(self, fileWriter)
       } else {
         fileWriter.onwriteend = function(){
           start(self, fileWriter)
