@@ -20,6 +20,11 @@ function readFile(path, opts, cb){
 
   function success(fileEntry){
     fileEntry.file(function(file){
+
+      if (encoding === 'blob'){
+        return cb(null, file)
+      }
+
       var reader = new FileReader();
       var readType = 'readAsText';
       var type = {type: ''};
