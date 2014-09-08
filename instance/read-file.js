@@ -19,6 +19,11 @@ function readFile(path, opts, cb){
   this.entry.getFile(path, {create: opts.create || false}, success, error)
 
   function success(fileEntry){
+
+    if (encoding === 'entry'){
+      return cb(null, fileEntry)
+    }
+
     fileEntry.file(function(file){
 
       if (encoding === 'blob'){
