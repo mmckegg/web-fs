@@ -59,3 +59,6 @@ chrome.fileSystem.chooseEntry({type: 'openDirectory'}, function(entry){
   - `fs.unlink`
   - `fs.writeFile`
   - `fs.write`
+  - `fs.watchFile`
+  - `fs.unwatchFile`
+  - `fs.watch`

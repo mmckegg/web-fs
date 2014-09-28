@@ -12,6 +12,8 @@ function rename(from, to, cb){
 
   function success(toDirectory){
     fileEntry.moveTo(toDirectory, path.basename(to), function(){
+      fs.listeners.change(fs.normalize(from))
+      fs.listeners.change(fs.normalize(to))
       cb&&cb(null)
     }, error)
   }

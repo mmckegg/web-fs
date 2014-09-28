@@ -19,5 +19,6 @@ function writeFile(path, data, opts, cb){
   fs.write(path, data, 0, null, null, function(err, len){
     if (err) return cb(err)
     fs.truncate(path, len, cb)
+    fs.listeners.change(fs.normalize(path))
   })
 }

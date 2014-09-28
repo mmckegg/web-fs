@@ -27,6 +27,11 @@ function WriteStream(fs, filePath, opts){
 
   fs.entry.getFile(filePath, {create: create}, success, error)
 
+  // watchers
+  self.on('finish', function(){
+    fs.listeners.change(fs.normalize(filePath))
+  })
+
   function error(err){ self.emit('error', err) }
 
   function success(fileEntry){

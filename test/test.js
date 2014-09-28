@@ -5,13 +5,7 @@ test(function(t){
 
   t.plan(10)
 
-  navigator.webkitTemporaryStorage.requestQuota(1024*1024, function(grantedBytes) {
-    window.webkitRequestFileSystem(PERSISTENT, grantedBytes, function(result){
-      doTest(WebFS(result.root))
-    })
-  })
-
-  function doTest(fs){
+  getFs(function(fs){
 
     // from https://github.com/NHQ/nbfs/blob/master/test.js
 
@@ -104,5 +98,30 @@ test(function(t){
         })
       })
     })
-  }
+  })
 })
+
+test('watchFile', function(t) {
+  t.plan(3);
+
+  getFs(function(fs){
+    fs.watchFile('/test', function() {
+      t.ok(true);
+    })
+
+    fs.writeFile('/test', new Buffer(1), function() {
+      fs.truncate('/test', 10000, function(err) {
+        fs.unlink('/test');
+      })
+    })
+  })
+
+})
+
+function getFs(cb){
+  navigator.webkitTemporaryStorage.requestQuota(1024*1024, function(grantedBytes) {
+    window.webkitRequestFileSystem(TEMPORARY, grantedBytes, function(result){
+      cb(WebFS(result.root))
+    })
+  })
+}
