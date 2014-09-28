@@ -1,6 +1,7 @@
 // from https://github.com/mafintosh/level-filesystem/blob/master/watchers.js
 
 var events = require('events');
+var getDirectoryName = require('path').dirname
 
 module.exports = function() {
   var listeners = {};
@@ -39,7 +40,9 @@ module.exports = function() {
   };
 
   that.change = function(key) {
+    var parentKey = getDirectoryName(key)
     if (listeners[key]) listeners[key].emit('change');
+    if (listeners[parentKey]) listeners[parentKey].emit('change');
   };
 
   that.cb = function(key, cb) {
