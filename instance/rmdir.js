@@ -5,7 +5,7 @@ function rmdir(path, cb){
 
   function success(dir){    
     dir.remove(function(){
-      cb(null)
+      cb&&cb(null)
 
       // watchers
       fs.listeners.change(fs.normalize(path))
@@ -14,6 +14,6 @@ function rmdir(path, cb){
   }
 
   function error(err){
-    cb(err, null)
+    cb&&cb(err, null)
   }
 }
