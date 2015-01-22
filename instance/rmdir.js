@@ -1,6 +1,7 @@
 module.exports = rmdir
 
 function rmdir(path, cb){
+  var fs = this
   this.entry.getDirectory(path, {create: false}, success, error);
 
   function success(dir){    
