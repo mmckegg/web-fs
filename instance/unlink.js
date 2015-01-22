@@ -6,9 +6,10 @@ function unlink(path, cb){
     fileEntry.remove(function(){
       cb&&cb(null)
       fs.listeners.change(fs.normalize(path))
-    }, cb)
-    function error(err){
-      cb&&cb(err)
-    }
-  })
+    }, cb, error)
+  }, error)
+
+  function error(err){
+    cb&&cb(err)
+  }
 }
