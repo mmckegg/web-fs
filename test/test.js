@@ -101,8 +101,26 @@ test(function(t){
   })
 })
 
+test('rename directory', function(t){
+ t.plan(3);
+ getFs(function(fs){
+
+  fs.mkdir('/tmp/cooltest', function(err){
+    fs.rename('/tmp/cooltest','/tmp/coolertest', function(err){
+      t.equal(err, null)
+      fs.readdir('/tmp', function(err, files){
+        t.notOk(~files.indexOf('cooltest'))
+        t.ok(~files.indexOf('coolertest'))
+      })
+    })
+  })
+
+ })
+})
+
 test('watchFile', function(t) {
-  t.plan(3);
+
+  t.plan(4)
 
   getFs(function(fs){
     fs.watchFile('/test', function() {
