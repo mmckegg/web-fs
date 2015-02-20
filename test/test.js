@@ -61,7 +61,7 @@ test(function(t){
     })
 
     // 2 tests
-    fs.write('testbed', 'a string is the thing', 0, 8, null, function(err, written, buf){
+    fs.write('testbed', 'a string is the thing', 0, 8, null, function(err){
       if(err) throw err
       fs.readFile('testbed', 'utf8', function(err, file){
         t.equal(file, 'a string') // truncated
@@ -76,8 +76,10 @@ test(function(t){
     })
 
     // 1 test
-    fs.writeFile('test-write-truncate', 'a string is the thing', function(err, written, buf){
-      fs.writeFile('test-write-truncate', 'shorter value', function(err, written, buf){
+    fs.writeFile('test-write-truncate', 'a string is the thing', function(err){
+      if(err) throw err
+      fs.writeFile('test-write-truncate', 'shorter value', function(err){
+        if(err) throw err
         fs.readFile('test-write-truncate', 'utf8', function(err, file){
           if(err) throw err
           t.equal(file, 'shorter value')
@@ -86,7 +88,7 @@ test(function(t){
     })
 
     // 2 tests
-    fs.writeFile('testbed2', 'a string is the thing', function(err, written, buf){
+    fs.writeFile('testbed2', 'a string is the thing', function(err){
       if(err) throw err
       fs.readFile('testbed2', 'utf8', function(err, file){
         t.equal(file, 'a string is the thing')
@@ -120,7 +122,7 @@ test('rename directory', function(t){
 
 test('watchFile', function(t) {
 
-  t.plan(4)
+  t.plan(3)
 
   getFs(function(fs){
     fs.watchFile('/test', function() {
