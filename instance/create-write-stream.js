@@ -53,7 +53,7 @@ function WriteStream(fs, filePath, opts){
         fileWriter.seek(opts.start)
       }
 
-      if (opts.truncate){
+      if (truncate){
         start(self, fileWriter)
       } else {
         fileWriter.onwriteend = function(){
