@@ -17,5 +17,13 @@ Stats.prototype = {
 
   isFile: function(){
     return this.entry.isFile
+  },
+
+  isSocket: function(){
+    return false
+  },
+
+  isSymbolicLink: function(){
+    return false
   }
 }
