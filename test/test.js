@@ -3,7 +3,7 @@ var test = require('tape')
 
 test(function(t){
 
-  t.plan(10)
+  t.plan(11)
 
   getFs(function(fs){
 
@@ -72,6 +72,14 @@ test(function(t){
             t.equal(file, 'a string')
           })
         })
+      })
+    })
+
+    fs.write('test-write-out-of-bounds', 'a string is the thing', 0, 21, 5, function(err){
+      if(err) throw err
+      fs.readFile('test-write-out-of-bounds', 'utf8', function(err, file){
+        if(err) throw err
+        t.equal(file.length, 26)
       })
     })
 
