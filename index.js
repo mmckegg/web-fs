@@ -19,6 +19,7 @@ WebFS.prototype = {
   createReadStream: require('./instance/create-read-stream.js'),
   createWriteStream: require('./instance/create-write-stream.js'),
   mkdir: require('./instance/mkdir.js'),
+  read: require('./instance/read.js'),
   readFile: require('./instance/read-file.js'),
   readdir: require('./instance/readdir.js'),
   rename: require('./instance/rename.js'),
