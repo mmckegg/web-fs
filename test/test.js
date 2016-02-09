@@ -3,7 +3,7 @@ var test = require('tape')
 
 test(function(t){
 
-  t.plan(10)
+  t.plan(11)
 
   getFs(function(fs){
 
@@ -84,6 +84,14 @@ test(function(t){
           if(err) throw err
           t.equal(file, 'shorter value')
         })
+      })
+    })
+
+    // 1 test
+    fs.writeFile('test-exists', 'a string is the thing', function(err){
+      if(err) throw err
+      fs.exists('test-exists', function(exists) {
+        t.equal(exists, true)
       })
     })
 
