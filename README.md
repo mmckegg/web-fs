@@ -51,6 +51,7 @@ chrome.fileSystem.chooseEntry({type: 'openDirectory'}, function(entry){
   - `fs.createWriteStream`
   - `fs.mkdir`
   - `fs.readFile`
+  - `fs.read`
   - `fs.readdir`
   - `fs.rename`
   - `fs.rmdir`
