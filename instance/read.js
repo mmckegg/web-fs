@@ -10,7 +10,7 @@ function read(path, buffer, offset, length, position, cb){
         if (evt.target.readyState === FileReader.DONE) {
           var result = Buffer.concat([
             buffer.slice(0, offset), 
-            new Buffer(evt.target.result),
+            new Buffer(new Uint8Array(evt.target.result)),
             buffer.slice(length, buffer.length)
           ])
           cb(null, evt.target.result.byteLength, result)
