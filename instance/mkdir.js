@@ -5,7 +5,7 @@ function mkdir(path, mode, cb){
 
   if (cb === undefined) cb = mode;
 
-  this.entry.getDirectory(path, {create: true}, success, error);
+  this.entry.getDirectory(path.replace(/^\//, ""), {create: true}, success, error);
 
   function success(dir){
     cb(null)
