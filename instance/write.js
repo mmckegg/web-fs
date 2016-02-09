@@ -28,21 +28,20 @@ function write(path, data, offset, length, pos, cb){
 
   function success(fileEntry){
     fileEntry.createWriter(function(writer){
-      if(pos) writer.seek(pos)
+      positionWriter(writer, pos, function() {
+        var blob = new Blob([data])
 
-      var blob = new Blob([data])
+        if(offset || length) {
+          blob = blob.slice(offset, offset + length)
+        }
 
-      if(offset || length) {
-        blob = blob.slice(offset, offset + length)
-      }
+        writer.onwriteend = function(){
+          cb(null, blob.size)
+        }
 
-      writer.onwriteend = function(){
-        cb(null, blob.size)
-      }
-
-      writer.onerror = cb
-      writer.write(blob)
-
+        writer.onerror = cb
+        writer.write(blob)
+      })
     }, error)
   }
 
@@ -57,4 +56,18 @@ function checkCallback(cb) {
     throw 'Callback is required'
   }
   return cb
+}
+
+function positionWriter(writer, pos, cb) {
+  if (pos) writer.seek(pos)
+  if (pos && writer.position < pos) { 
+    // pos is greater than file size, adjust file size to accommodate
+    writer.truncate(pos)
+    writer.onwriteend = function() {
+      writer.seek(pos)
+      cb()
+    }
+  } else {
+    cb()
+  }
 }
