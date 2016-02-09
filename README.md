@@ -49,7 +49,9 @@ chrome.fileSystem.chooseEntry({type: 'openDirectory'}, function(entry){
 
   - `fs.createReadStream`
   - `fs.createWriteStream`
+  - `fs.exists`
   - `fs.mkdir`
+  - `fs.open`
   - `fs.readFile`
   - `fs.read`
   - `fs.readdir`
