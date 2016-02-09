@@ -18,6 +18,7 @@ function stat(path, cb){
 }
 
 function getEntry(root, path, opts, success, error){
+  if (path === "." || path === "/" || path === "./") return success(root)
   root.getFile(path, opts, success, function(){
     root.getDirectory(path, opts, success, error)
   })
