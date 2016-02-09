@@ -3,7 +3,7 @@ var test = require('tape')
 
 test(function(t){
 
-  t.plan(11)
+  t.plan(14)
 
   getFs(function(fs){
 
@@ -20,6 +20,18 @@ test(function(t){
       })
     })
 
+    // 3 test
+    fs.writeFile('partial-read', 'a string is the thing', function(err){
+      if(err) throw err 
+      fs.read('partial-read', new Buffer(0), 0, 6, 9, function(err, read, buffer){
+        var rawData = buffer.toString()
+        t.equal(read, 6)
+        t.equal(rawData, 'is the')
+        fs.unlink('partial-read', function(err){
+          t.equal(err, null)
+        })  
+      })  
+    })  
 
     var buf = new Float32Array(1024 * 1024);
     for(var x = 0; x < buf.length; x++){

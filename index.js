@@ -22,6 +22,7 @@ WebFS.prototype = {
   ftruncate: require('./instance/truncate.js'),
   mkdir: require('./instance/mkdir.js'),
   open: require('./instance/open.js'),
+  read: require('./instance/read.js'),
   readFile: require('./instance/read-file.js'),
   readdir: require('./instance/readdir.js'),
   rename: require('./instance/rename.js'),
