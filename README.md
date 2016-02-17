@@ -47,6 +47,7 @@ chrome.fileSystem.chooseEntry({type: 'openDirectory'}, function(entry){
 
 ### Instance methods
 
+  - `fs.close`
   - `fs.createReadStream`
   - `fs.createWriteStream`
   - `fs.exists`

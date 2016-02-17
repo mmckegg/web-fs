@@ -16,6 +16,7 @@ WebFS.prototype = {
   
   constructor: WebFS,
 
+  close: require('./instance/close.js'),
   createReadStream: require('./instance/create-read-stream.js'),
   createWriteStream: require('./instance/create-write-stream.js'),
   exists: require('./instance/exists.js'),
